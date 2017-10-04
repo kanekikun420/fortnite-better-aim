@@ -140,6 +140,9 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PostBuildEvent>
+      <Command> copy /Y "$(TargetDir)$(TargetName).dll" "c:\tmp\d3aim.dll"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="FW1FontWrapper\CFW1ColorRGBA.h" />
