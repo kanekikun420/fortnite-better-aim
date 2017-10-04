@@ -1,32 +1,5 @@
-﻿//d3d11 w2s finder by n7
-#include "variables.h"
-#include <vector>
-#include <d3d11.h>
-#include <D3D11Shader.h>
-#include <D3Dcompiler.h>//generateshader
-#pragma comment(lib, "D3dcompiler.lib")
-#pragma comment(lib, "d3d11.lib")
+﻿#include "variables.h"
 #pragma comment(lib, "winmm.lib") //timeGetTime
-#include "MinHook/include/MinHook.h" //detour x86&x64
-#include "FW1FontWrapper/FW1FontWrapper.h" //font
-
-typedef HRESULT(__stdcall *D3D11PresentHook) (IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT Flags);
-typedef void(__stdcall *D3D11DrawIndexedHook) (ID3D11DeviceContext* pContext, UINT IndexCount, UINT StartIndexLocation, INT BaseVertexLocation);
-typedef void(__stdcall *D3D11CreateQueryHook) (ID3D11Device* pDevice, const D3D11_QUERY_DESC *pQueryDesc, ID3D11Query **ppQuery);
-
-D3D11PresentHook phookD3D11Present = NULL;
-D3D11DrawIndexedHook phookD3D11DrawIndexed = NULL;
-D3D11CreateQueryHook phookD3D11CreateQuery = NULL;
-ID3D11Device *pDevice = NULL;
-ID3D11DeviceContext *pContext = NULL;
-
-DWORD_PTR* pSwapChainVtable = NULL;
-DWORD_PTR* pContextVTable = NULL;
-DWORD_PTR* pDeviceVTable = NULL;
-
-IFW1Factory *pFW1Factory = NULL;
-IFW1FontWrapper *pFontWrapper = NULL;
-
 #include "main.h" //helper funcs
 #include "Utils.h"
 
@@ -119,7 +92,6 @@ DWORD WINAPI UpdateThread(LPVOID)
 	{
 		printf("----------------!!!AN ERROR HAS OCCURRED!!!----------------\n");
 	}
-	
 	return NULL;
 }
 
@@ -148,6 +120,7 @@ BOOL __stdcall DllMain(HINSTANCE hModule, DWORD dwReason, LPVOID lpReserved)
 	{
 	case DLL_PROCESS_ATTACH: // A process is loading the DLL.
 		DisableThreadLibraryCalls(hModule);
+		char dlldir[320];
 		GetModuleFileName(hModule, dlldir, 512);
 		for (size_t i = strlen(dlldir); i > 0; i--) { if (dlldir[i] == '\\') { dlldir[i + 1] = 0; break; } }
 		CreateThread(NULL, 0, InitializeHook, NULL, 0, NULL);
